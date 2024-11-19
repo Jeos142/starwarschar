@@ -5,21 +5,21 @@
         v-if="!isLoading"
         @show-vehicle="showVehicle"
     />
+
     <div v-else class="loading_text">
       Loading...
     </div>
-    <div
+    <transition>
+      <div
         class="modal"
         v-if="showModal"
         @click="hideModal"
-    >
-      <div
-          class="modal-content"
       >
+        <div class="modal-content">
          <VehicleList :garage="this.garage"/>
+        </div>
       </div>
-    </div>
-
+    </transition>
     <div class="page__wrapper">
       <div
           v-for="pageNumber in totalPages"
@@ -81,7 +81,7 @@ export default {
         const query='https://swapi.dev/api/people/?page='+String(this.page)
         const response = await axios.get(query,);
         this.totalPages=Math.ceil( response.data.count/this.limit);
-        console.log(response.data.count);
+
         console.log(response.data.results);
         this.peoples = response.data.results;
 
@@ -142,6 +142,7 @@ export default {
     background:  rgba(0,0,0,0.5);
     position: fixed;
     display: flex;
+    animation: 0.3s alternate ease;
   }
   .modal-content{
     margin:auto;
@@ -167,5 +168,14 @@ export default {
   }
   .current-page{
     border: 2px solid gold;
+  }
+  .v-enter-active,
+  .v-leave-active {
+  transition: opacity 0.5s ease;
+  }
+
+  .v-enter-from,
+  .v-leave-to {
+  opacity: 0;
   }
 </style>
